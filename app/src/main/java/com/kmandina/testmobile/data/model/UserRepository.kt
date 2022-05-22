@@ -179,6 +179,12 @@ class UserRepository private constructor(
                         d.dismiss()
                     }
 
+                }else{
+                    AlertDialog.Builder(context)
+                        .setTitle("Notification")
+                        .setMessage("Something was wrong, try again.")
+                        .setPositiveButton("Accept") { _, _ ->  }
+                        .show()
                 }
             }
 

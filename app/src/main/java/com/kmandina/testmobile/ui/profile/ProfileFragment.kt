@@ -54,7 +54,16 @@ class ProfileFragment : Fragment() {
 
         uiBind.checkAction.setOnClickListener {
             if (MyUtils.isNetworkConnected(requireContext())) {
-                viewmodelU.trx(requireContext(), dialog, uiBind.cardNumberInput.text.toString())
+                if(uiBind.cardNumberInput.text.toString() != ""){
+                    viewmodelU.trx(requireContext(), dialog, uiBind.cardNumberInput.text.toString())
+                }else{
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Notification")
+                        .setMessage("Type a card number")
+                        .setPositiveButton("Accept") { _, _ ->  }
+                        .show()
+                }
+
             }else{
                 AlertDialog.Builder(requireContext())
                     .setTitle("Notification")
