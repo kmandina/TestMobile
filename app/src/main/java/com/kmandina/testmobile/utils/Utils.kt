@@ -31,4 +31,8 @@ object MyUtils {
 
     }
 
+    fun putValueString(value: String?): String{
+        return value ?: ""
+    }
+
 }

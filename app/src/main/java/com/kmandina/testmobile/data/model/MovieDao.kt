@@ -13,7 +13,7 @@ interface MovieDao {
     fun getAllMovie(): LiveData<List<Movie>>
 
     @Query("SELECT * FROM movie WHERE id = :id")
-    fun getMovie(id: String): LiveData<Movie>
+    fun getMovie(id: Long): LiveData<Movie>
 
     @Update
     fun updateMovie(movie: Movie)
@@ -25,9 +25,22 @@ interface MovieDao {
     suspend fun deleteMovie(movie: Movie)
 
     @Query("DELETE FROM movie WHERE id =:id")
-    suspend fun deleteMoviebyId(id: String)
+    suspend fun deleteMoviebyId(id: Long)
 
     @Transaction
     @Query("SELECT * FROM movie WHERE id IN (SELECT movie_id FROM media )")
     fun getAllMovieMedia(): LiveData<List<MovieMedia>>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM movie WHERE id = :id LIMIT 1)")
+    suspend fun existMovie(id: Long): Boolean
+
+    @Query("SELECT * FROM movie WHERE id = :id")
+    suspend fun getMovieExist(id: Long): Movie
+
+//    @Query("DELETE FROM movie WHERE count <= :updateControl")
+//    suspend fun deleteMovieUpdateControl(updateControl: Int)
+//
+//    @Transaction
+//    @Query("SELECT * FROM movie WHERE id = :id AND (id IN (SELECT trip_id FROM address))")
+//    suspend fun getMovieAddressSuspend(id: Long): TripAddresses?
 }

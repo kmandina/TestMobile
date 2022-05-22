@@ -13,7 +13,7 @@ interface MediaDao {
     fun getAllMedia(): LiveData<List<Media>>
 
     @Query("SELECT * FROM media WHERE id = :id")
-    fun getMedia(id: String): LiveData<Media>
+    fun getMedia(id: Long): LiveData<Media>
 
     @Update
     fun updateMedia(media: Media)
@@ -25,6 +25,11 @@ interface MediaDao {
     suspend fun deleteMedia(media: Media)
 
     @Query("DELETE FROM media WHERE id =:id")
-    suspend fun deleteMediabyId(id: String)
+    suspend fun deleteMediabyId(id: Long)
 
+    @Query("SELECT EXISTS(SELECT 1 FROM media WHERE resource = :resource LIMIT 1)")
+    suspend fun existMedia(resource: String): Boolean
+
+    @Query("SELECT * FROM media WHERE resource = :resource")
+    suspend fun getMediaExist(resource: String): Media
 }

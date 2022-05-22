@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
                 val okHttpClient = builder
                     .readTimeout(180, TimeUnit.SECONDS)
                     .connectTimeout(180, TimeUnit.SECONDS)
+
                     .build()
 
                 val retrofit = Retrofit.Builder()
@@ -65,17 +66,19 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
                 val connectorService: ConnectorService =
                     retrofit.create(ConnectorService::class.java)
 
-                val loginRequest = LoginRequest(
-                    user,
-                    pass,
-                    "MX",
-                    "password",
-                    "IATestCandidate",
-                    "c840457e777b4fee9b510fbcd4985b68"
-                )
+//                val loginRequest = LoginRequest(
+//
+//                )
 
                 val call: Call<LoginResponse> =
-                    connectorService.login(loginRequest)
+                    connectorService.login(
+                        user,
+                        pass,
+                        "MX",
+                        "password",
+                        "IATestCandidate",
+                        "c840457e777b4fee9b510fbcd4985b68"
+                    )
 
                 call.enqueue(object : Callback<LoginResponse> {
                     override fun onResponse(

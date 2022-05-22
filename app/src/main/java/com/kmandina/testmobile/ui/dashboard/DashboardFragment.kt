@@ -6,37 +6,54 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.kmandina.testmobile.databinding.FragmentDashboardBinding
+import com.kmandina.testmobile.databinding.FragmentProfileBinding
+import com.kmandina.testmobile.ui.profile.ProfileViewModel
+import com.kmandina.testmobile.utils.InjectorUtils
 
 class DashboardFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private val viewmodel: DashboardViewModel by viewModels {
+        InjectorUtils.provideDashboardViewModelFactory(requireContext())
+    }
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var uiBind: FragmentDashboardBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
 
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        uiBind = FragmentDashboardBinding.inflate(inflater, container, false)
 
-        val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        context ?: return uiBind.root
+
+        return uiBind.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewmodel.updateMovie(requireContext())
+        subscribeUiRoute()
+
+    }
+
+    private fun subscribeUiRoute() {
+        viewmodel.routes.observe(viewLifecycleOwner) { routes ->
+            val adapter = MovieAdapter(routes)
+            uiBind.movieList.adapter = adapter
+            subscribeUiGrid(adapter)
+        }
+    }
+
+    private fun subscribeUiGrid(adapter: MovieAdapter) {
+        viewmodel.movies.observe(viewLifecycleOwner) { movies ->
+            adapter.submitList(movies)
+        }
     }
 }

@@ -17,7 +17,7 @@ data class Media(
 
     @ColumnInfo(name = "code") val code: String,
 
-    @ColumnInfo(name = "movie_id") val movieId: String
+    @ColumnInfo(name = "movie_id") val movieId: Long
 
 ){
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") var id: Long = 0

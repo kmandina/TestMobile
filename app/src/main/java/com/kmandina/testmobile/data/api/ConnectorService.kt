@@ -1,26 +1,41 @@
 package com.kmandina.testmobile.data.api
 
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import com.kmandina.testmobile.data.api.serialize.LoginRequest
 import com.kmandina.testmobile.data.api.serialize.LoginResponse
+import com.kmandina.testmobile.data.api.serialize.MoviesRequest
 import com.kmandina.testmobile.data.model.User
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ConnectorService {
 
     @POST("/v2/oauth/token")
     @Headers(
-        "Content-Type: application/json;charset=utf-8",
-        "Accept: application/json;charset=utf-8",
-        "Cache-Control: no-cache",
-        "HOST: stage-api.cinepolis.com",
+        "Content-Type: application/x-www-form-urlencoded",
+        "Accept: */*",
+        "Accept-Encoding: gzip, deflate, br",
         "api_key: stage_HNYh3RaK_Test",
+        "Cache-Control: no-cache",
+        "Host: stage-api.cinepolis.com",
         "POST: /v2/oauth/token HTTP/1.1"
     )
-    fun login(@Body request: LoginRequest): Call<LoginResponse>
+    @FormUrlEncoded
+    fun login(
+        @Field("username") username: String,
+
+        @Field("password") password: String,
+
+        @Field("country_code") countryCode: String,
+
+        @Field("grant_type") grantType: String,
+
+        @Field("client_id") clientId: String,
+
+        @Field("client_secret") clientSecret: String
+
+    ): Call<LoginResponse>
 
     @GET("https://stage-api.cinepolis.com/v1/members/profile?country_code=MX")
     @Headers(
@@ -33,7 +48,7 @@ interface ConnectorService {
     )
     fun getUser(): Call<User?>
 
-    @GET("https://stage-api.cinepolis.com/v2/locations/cinemas?cities=61&country_code=MX&include_cinemas=true")
+    @GET("https://stage-api.cinepolis.com/v2/movies?country_code=MX&cinemas=61")
     @Headers(
         "Content-Type: application/json;charset=utf-8",
         "Accept: application/json;charset=utf-8",
@@ -42,6 +57,6 @@ interface ConnectorService {
         "api_key: stage_HNYh3RaK_Test",
         "GET: /v2/movies?country_code=MX&amp;cinemas=61 HTTP/1.1"
     )
-    fun getCinemas(): Call<User?>
+    fun getMovies(): Call<MoviesRequest?>
 
 }

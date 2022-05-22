@@ -18,6 +18,9 @@ import com.kmandina.testmobile.utils.DATABASE_NAME
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun movieDao(): MovieDao
+    abstract fun mediaDao(): MediaDao
+    abstract fun routeDao(): RouteDao
+    abstract fun sizeDao(): SizeDao
 
     companion object {
 
