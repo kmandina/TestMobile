@@ -86,18 +86,18 @@ class DetailFragment : Fragment(), MediaPlayer.OnBufferingUpdateListener, MediaP
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getPath()
-
         surfaceHolder = uiBind.vv.holder
         surfaceHolder!!.addCallback(this)
 
         uiBind.vv.setOnClickListener { v: View? ->
             if(mediaPlayer != null) {
                 if (mediaPlayer != null && mediaPlayer!!.isPlaying) {
+
                     mediaPlayer!!.pause()
                     uiBind.play.setImageResource(R.drawable.play)
                     show()
                 } else {
+
                     mediaPlayer!!.start()
                     uiBind.play.setImageResource(R.drawable.pause)
                     hide()
@@ -191,7 +191,7 @@ class DetailFragment : Fragment(), MediaPlayer.OnBufferingUpdateListener, MediaP
     override fun surfaceCreated(p0: SurfaceHolder) {
         Log.d("surfaceCreated", "surfaceCreated called")
         Log.d("playVideo", path)
-        playVideo(path)
+        getPath()
     }
 
 
