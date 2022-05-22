@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,13 +31,9 @@ class MovieAdapter(private val routes: List<RouteSize>) : ListAdapter<MovieMedia
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val movie = getItem(position)
         (holder as MovieViewHolder).bind(movie)
-
         if(movie.medias.isNotEmpty()){
-
             for(media in movie.medias){
-
                 if(media.code == "poster"){
-
                     if(routes.isNotEmpty()){
 
                             for(route in routes){
@@ -66,14 +63,9 @@ class MovieAdapter(private val routes: List<RouteSize>) : ListAdapter<MovieMedia
                             }
 
                         }
-
                 }
-
             }
-
         }
-
-
     }
 
     class MovieViewHolder(
@@ -91,14 +83,14 @@ class MovieAdapter(private val routes: List<RouteSize>) : ListAdapter<MovieMedia
         }
 
         private fun navigateToMovie(
-            trip: MovieMedia,
+            movie: MovieMedia,
             view: View
         ) {
-//            val direction =
-//                TripsFragmentDirections.actionNavigationTripsToTripDetailFragment(
-//                    trip.id
-//                )
-//            view.findNavController().navigate(direction)
+            val direction =
+                DashboardFragmentDirections.actionNavigationDashboardToDetailFragment(
+                    movie.movie.id
+                )
+            view.findNavController().navigate(direction)
         }
 
         fun bind(item: MovieMedia) {

@@ -1,11 +1,9 @@
 package com.kmandina.testmobile.ui.dashboard
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModel
 import com.kmandina.testmobile.data.model.MovieRespository
-import com.kmandina.testmobile.data.model.RouteRepository
 
 class DashboardViewModel  (
     private val repos: MovieRespository,
@@ -15,6 +13,6 @@ class DashboardViewModel  (
 
     val routes = repos.getAllRoute()
 
-    fun updateMovie(context: Context) = repos.insertAllMovie(context)
+    fun updateMovie(context: Context, dialog: AlertDialog?) = repos.insertAllMovie(context, dialog)
 
 }

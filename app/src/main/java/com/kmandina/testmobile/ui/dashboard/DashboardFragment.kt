@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
+import com.kmandina.testmobile.R
 import com.kmandina.testmobile.databinding.FragmentDashboardBinding
-import com.kmandina.testmobile.databinding.FragmentProfileBinding
-import com.kmandina.testmobile.ui.profile.ProfileViewModel
 import com.kmandina.testmobile.utils.InjectorUtils
 
 class DashboardFragment : Fragment() {
@@ -22,6 +19,8 @@ class DashboardFragment : Fragment() {
 
     private lateinit var uiBind: FragmentDashboardBinding
 
+    private var dialog: AlertDialog? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -29,6 +28,11 @@ class DashboardFragment : Fragment() {
     ): View {
 
         uiBind = FragmentDashboardBinding.inflate(inflater, container, false)
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setCancelable(false)
+        builder.setView(R.layout.layout_loading_dialog)
+        dialog = builder.create()
 
         context ?: return uiBind.root
 
@@ -38,7 +42,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewmodel.updateMovie(requireContext())
+        viewmodel.updateMovie(requireContext(), dialog)
         subscribeUiRoute()
 
     }

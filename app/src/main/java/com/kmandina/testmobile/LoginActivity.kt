@@ -28,8 +28,15 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
 
     private lateinit var binding: ActivityLoginBinding
 
+    private var dialog: AlertDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setView(R.layout.layout_loading_dialog)
+        dialog = builder.create()
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -80,12 +87,18 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
                         "c840457e777b4fee9b510fbcd4985b68"
                     )
 
+                if(dialog != null){
+                    dialog!!.show()
+                }
+
                 call.enqueue(object : Callback<LoginResponse> {
                     override fun onResponse(
                         call: Call<LoginResponse>,
                         response: Response<LoginResponse>
                     ) {
-//                            if (dialog.isShowing) dialog.dismiss()
+
+                        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+
                         if (response.isSuccessful) {
 
                             if (response.body()?.access != null) {
@@ -124,6 +137,7 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
                     override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                         Log.d("Auth", "error connection")
 
+                        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
                         AlertDialog.Builder(this@LoginActivity)
                             .setTitle("Notification")

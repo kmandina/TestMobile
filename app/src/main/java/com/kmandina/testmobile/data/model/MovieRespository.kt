@@ -2,6 +2,7 @@ package com.kmandina.testmobile.data.model
 
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.room.ColumnInfo
 import com.kmandina.testmobile.data.api.ConnectorService
 import com.kmandina.testmobile.data.api.serialize.MoviesRequest
@@ -29,7 +30,9 @@ class MovieRespository private constructor(
 
     fun getAllRoute() = routeDao.getAllRouteSize()
 
-    fun insertAllMovie(context: Context) {
+    fun getMovie(id: Long) = movieDao.getMovieMedia(id)
+
+    fun insertAllMovie(context: Context, dialog: AlertDialog?) {
 
         if(MyUtils.isNetworkConnected(context)) {
 
@@ -48,9 +51,13 @@ class MovieRespository private constructor(
 
             val getMoviesRequest = apiService.getMovies()
 
+            dialog?.show()
+
             getMoviesRequest.enqueue(object : Callback<MoviesRequest?> {
                 override fun onResponse(call: Call<MoviesRequest?>, response: Response<MoviesRequest?>) {
                     if (response.isSuccessful && response.body() != null) {
+
+                        if (dialog != null && dialog.isShowing) dialog.dismiss()
 
                         CoroutineScope(Dispatchers.IO).launch {
 
@@ -242,11 +249,43 @@ class MovieRespository private constructor(
 
                 override fun onFailure(call: Call<MoviesRequest?>, t: Throwable) {
                     Log.d("getMovies", "isNotSuccessful")
+
+                    if (dialog != null && dialog.isShowing) dialog.dismiss()
                 }
 
             })
         }
 
+    }
+
+    suspend fun getTrailerPath(movieId: Long): String {
+
+        val routes = routeDao.getAllRouteSizeSuspend()
+
+        val movie = movieDao.getMovieMediaSuspend(movieId)
+
+        if (movie.medias.isNotEmpty()) {
+            for (media in movie.medias) {
+                if (media.code == "trailer_mp4") {
+                    if (routes.isNotEmpty()) {
+                        for (route in routes) {
+                            if (route.route.code == "trailer_mp4") {
+                                if (route.sizes.isNotEmpty()) {
+                                    for (size in route.sizes) {
+                                        if (size.medium != "") {
+                                            Log.d("PATH", size.medium + media.resource)
+                                            return size.medium + media.resource
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ""
     }
 
     companion object {

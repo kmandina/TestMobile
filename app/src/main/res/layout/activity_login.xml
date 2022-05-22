@@ -73,6 +73,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:background="@color/purple_700"
             android:id="@+id/loginAction"
             android:layout_margin="5dp"
             android:layout_width="0dp"

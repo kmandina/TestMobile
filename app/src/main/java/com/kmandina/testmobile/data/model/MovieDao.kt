@@ -15,6 +15,14 @@ interface MovieDao {
     @Query("SELECT * FROM movie WHERE id = :id")
     fun getMovie(id: Long): LiveData<Movie>
 
+    @Transaction
+    @Query("SELECT * FROM movie WHERE id = :id AND id IN (SELECT movie_id FROM media )")
+    fun getMovieMedia(id: Long): LiveData<MovieMedia>
+
+    @Transaction
+    @Query("SELECT * FROM movie WHERE id = :id AND id IN (SELECT movie_id FROM media )")
+    suspend fun getMovieMediaSuspend(id: Long): MovieMedia
+
     @Update
     fun updateMovie(movie: Movie)
 

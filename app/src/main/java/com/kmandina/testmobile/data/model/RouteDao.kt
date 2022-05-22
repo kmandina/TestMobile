@@ -31,6 +31,10 @@ interface RouteDao {
     @Query("SELECT * FROM route WHERE id IN (SELECT route_id FROM size )")
     fun getAllRouteSize(): LiveData<List<RouteSize>>
 
+    @Transaction
+    @Query("SELECT * FROM route WHERE id IN (SELECT route_id FROM size )")
+    suspend fun getAllRouteSizeSuspend(): List<RouteSize>
+
     @Query("SELECT EXISTS(SELECT 1 FROM route WHERE code = :code LIMIT 1)")
     suspend fun existRoute(code: String): Boolean
 

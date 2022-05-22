@@ -5,6 +5,7 @@ import com.kmandina.testmobile.data.model.AppDatabase
 import com.kmandina.testmobile.data.model.MovieRespository
 import com.kmandina.testmobile.data.model.UserRepository
 import com.kmandina.testmobile.ui.dashboard.DashboardViewModelFactory
+import com.kmandina.testmobile.ui.detail.DetailViewModelFactory
 import com.kmandina.testmobile.ui.profile.ProfileViewModelFactory
 
 object InjectorUtils {
@@ -34,6 +35,13 @@ object InjectorUtils {
         context: Context
     ): DashboardViewModelFactory {
         return DashboardViewModelFactory(getMovieRepository(context))
+    }
+
+    fun provideMovieDetailViewModelFactory(
+        context: Context,
+        movieId: Long
+    ): DetailViewModelFactory {
+        return DetailViewModelFactory(getMovieRepository(context), movieId)
     }
 
 }

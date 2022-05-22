@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -19,6 +20,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var uiBind: FragmentProfileBinding
 
+    private var dialog: AlertDialog? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,6 +36,11 @@ class ProfileFragment : Fragment() {
         }
         setHasOptionsMenu(true)
 
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setCancelable(false)
+        builder.setView(R.layout.layout_loading_dialog)
+        dialog = builder.create()
+
         context ?: return uiBind.root
 
         return uiBind.root
@@ -41,6 +49,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewmodelU.update(requireContext())
+        viewmodelU.update(requireContext(), dialog)
     }
 }

@@ -2,6 +2,7 @@ package com.kmandina.testmobile.data.model
 
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.PreferenceManager
 import com.kmandina.testmobile.data.api.ConnectorService
 import com.kmandina.testmobile.utils.MyUtils
@@ -25,7 +26,7 @@ class UserRepository private constructor(
 
     fun getUserByUsername(user: String) = userDao.getUserByUsername(user)
 
-    fun updateUser(context: Context){
+    fun updateUser(context: Context, dialog: AlertDialog?){
 
         if(MyUtils.isNetworkConnected(context)) {
 
@@ -53,9 +54,13 @@ class UserRepository private constructor(
 
             val userTaxi = apiService.getUser()
 
+            dialog?.show()
+
             userTaxi.enqueue(object : Callback<User?> {
                 override fun onResponse(call: Call<User?>, response: Response<User?>) {
                     if(response.isSuccessful && response.body() != null) {
+
+                        if (dialog != null && dialog.isShowing) dialog.dismiss()
 
                         Log.d("getUser", "isSuccessful")
 
@@ -96,6 +101,7 @@ class UserRepository private constructor(
 
                 override fun onFailure(call: Call<User?>, t: Throwable) {
                     Log.d("getUser", "isNotSuccessful")
+                    if (dialog != null && dialog.isShowing) dialog.dismiss()
                 }
 
             })

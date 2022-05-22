@@ -15,11 +15,29 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.kmandina.testmobile.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+
+        <action
+            android:id="@+id/action_navigation_dashboard_to_detail_fragment"
+            app:destination="@id/detail_fragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.kmandina.testmobile.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/detail_fragment"
+        android:name="com.kmandina.testmobile.ui.detail.DetailFragment"
+        android:label="@string/title_detail"
+        tools:layout="@layout/fragment_detail">
+
+        <argument
+            android:name="movieId"
+            app:argType="long" />
+
+    </fragment>
+
 </navigation>
