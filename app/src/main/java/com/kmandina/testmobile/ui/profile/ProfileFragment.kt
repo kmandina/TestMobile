@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import com.kmandina.testmobile.R
 import com.kmandina.testmobile.databinding.FragmentProfileBinding
 import com.kmandina.testmobile.utils.InjectorUtils
+import com.kmandina.testmobile.utils.MyUtils
 
 class ProfileFragment : Fragment() {
 
@@ -50,5 +51,17 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewmodelU.update(requireContext(), dialog)
+
+        uiBind.checkAction.setOnClickListener {
+            if (MyUtils.isNetworkConnected(requireContext())) {
+                viewmodelU.trx(requireContext(), dialog, uiBind.cardNumberInput.text.toString())
+            }else{
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Notification")
+                    .setMessage("Connection Error")
+                    .setPositiveButton("Accept") { _, _ ->  }
+                    .show()
+            }
+        }
     }
 }

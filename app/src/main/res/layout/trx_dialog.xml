@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_margin="5dp"
+        android:id="@+id/trxTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/title_trx"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintTop_toBottomOf="@+id/trxTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/trxList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="vertical"
+        app:spanCount="1"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        />
+
+    <ImageButton
+        android:id="@+id/close"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_action_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

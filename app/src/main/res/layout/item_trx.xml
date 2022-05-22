@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="trx"
+            type="com.kmandina.testmobile.data.api.serialize.TX"/>
+
+    </data>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:setDate="@{trx.date}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/background_dark"
+                android:layout_margin="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cinema"
+                tools:text="Fecha" />
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/cinema"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{trx.cinema}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:textColor="@android:color/background_dark"
+                android:layout_margin="2dp"
+                app:layout_constraintStart_toEndOf="@+id/date"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cost"
+                tools:text="Cinema" />
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/cost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                app:setFloat="@{trx.points}"
+                android:textColor="@android:color/background_dark"
+                android:layout_margin="2dp"
+                app:layout_constraintStart_toEndOf="@+id/cinema"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/note"
+                tools:text="Cost" />
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/note"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{trx.message}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:singleLine="true"
+                android:maxLength="25"
+                android:textColor="@android:color/background_dark"
+                android:layout_margin="1dp"
+                app:layout_constraintStart_toEndOf="@+id/cost"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Note" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

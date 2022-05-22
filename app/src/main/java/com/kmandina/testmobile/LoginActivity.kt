@@ -44,7 +44,20 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
 
         val sp = PreferenceManager.getDefaultSharedPreferences(this)
 
-        initViews(sp)
+        if(sp.getBoolean("login", false)){
+            if (MyUtils.isNetworkConnected(this)){
+                initViews(sp)
+            }else{
+                startActivity(
+                    Intent(
+                        this@LoginActivity,
+                        MainActivity::class.java
+                    )
+                )
+            }
+        }else{
+            initViews(sp)
+        }
     }
 
     private fun initViews(sp: SharedPreferences) {

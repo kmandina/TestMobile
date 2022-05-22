@@ -2,9 +2,7 @@ package com.kmandina.testmobile.data.api
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import com.kmandina.testmobile.data.api.serialize.LoginRequest
-import com.kmandina.testmobile.data.api.serialize.LoginResponse
-import com.kmandina.testmobile.data.api.serialize.MoviesRequest
+import com.kmandina.testmobile.data.api.serialize.*
 import com.kmandina.testmobile.data.model.User
 import retrofit2.Call
 import retrofit2.http.*
@@ -37,7 +35,7 @@ interface ConnectorService {
 
     ): Call<LoginResponse>
 
-    @GET("https://stage-api.cinepolis.com/v1/members/profile?country_code=MX")
+    @GET("/v1/members/profile?country_code=MX")
     @Headers(
         "Content-Type: application/json;charset=utf-8",
         "Accept: application/json;charset=utf-8",
@@ -48,7 +46,7 @@ interface ConnectorService {
     )
     fun getUser(): Call<User?>
 
-    @GET("https://stage-api.cinepolis.com/v2/movies?country_code=MX&cinemas=61")
+    @GET("/v2/movies?country_code=MX&cinemas=61")
     @Headers(
         "Content-Type: application/json;charset=utf-8",
         "Accept: application/json;charset=utf-8",
@@ -59,4 +57,14 @@ interface ConnectorService {
     )
     fun getMovies(): Call<MoviesRequest?>
 
+    @POST("/v2/members/loyalty/")
+    @Headers(
+        "Content-Type: application/json;charset=utf-8",
+        "Accept: application/json;charset=utf-8",
+        "Cache-Control: no-cache",
+        "HOST: stage-api.cinepolis.com",
+        "api_key: stage_4V78Fwm_android",
+        "GET: /v2/members/loyalty/ HTTP/1.1"
+    )
+    fun transactions(@Body request: TransactionRequest): Call<TransactionResponse>
 }

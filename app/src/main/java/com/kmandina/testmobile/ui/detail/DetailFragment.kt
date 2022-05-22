@@ -176,7 +176,7 @@ class DetailFragment : Fragment(), MediaPlayer.OnBufferingUpdateListener, MediaP
             mediaPlayer!!.prepare()
             uiBind.sbPlay.max = mediaPlayer!!.duration
             r.run()
-            // mMediaPlayer.prepareAsync(); Para streaming
+            mediaPlayer!!.prepareAsync(); //Para streaming
             mediaPlayer!!.setOnBufferingUpdateListener(this)
             mediaPlayer!!.setOnCompletionListener(this)
             mediaPlayer!!.setOnPreparedListener(this)

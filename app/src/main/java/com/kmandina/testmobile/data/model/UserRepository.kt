@@ -1,10 +1,22 @@
 package com.kmandina.testmobile.data.model
 
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
+import android.view.Window
+import android.view.WindowManager
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.RecyclerView
+import com.kmandina.testmobile.R
 import com.kmandina.testmobile.data.api.ConnectorService
+import com.kmandina.testmobile.data.api.serialize.TransactionRequest
+import com.kmandina.testmobile.data.api.serialize.TransactionResponse
+import com.kmandina.testmobile.ui.transaction.TrxAdapter
 import com.kmandina.testmobile.utils.MyUtils
 import com.kmandina.testmobile.utils.api
 import kotlinx.coroutines.CoroutineScope
@@ -52,11 +64,11 @@ class UserRepository private constructor(
 
             val apiService: ConnectorService = retrofit.create(ConnectorService::class.java)
 
-            val userTaxi = apiService.getUser()
+            val user = apiService.getUser()
 
             dialog?.show()
 
-            userTaxi.enqueue(object : Callback<User?> {
+            user.enqueue(object : Callback<User?> {
                 override fun onResponse(call: Call<User?>, response: Response<User?>) {
                     if(response.isSuccessful && response.body() != null) {
 
@@ -107,6 +119,75 @@ class UserRepository private constructor(
             })
 
         }
+
+    }
+
+    fun trx(context: Context, dialog: AlertDialog?, cardNumber: String){
+
+        val okHttpClient = OkHttpClient.Builder()
+            .readTimeout(180, TimeUnit.SECONDS)
+            .connectTimeout(180, TimeUnit.SECONDS)
+            .build()
+
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(api)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val apiService: ConnectorService = retrofit.create(ConnectorService::class.java)
+
+        val trax = apiService.transactions(
+            TransactionRequest(
+                cardNumber = cardNumber,
+                countryCode = "MX",
+                pin = "4804",
+                transactionInclude = true
+            )
+        )
+
+        dialog?.show()
+
+        trax.enqueue(object : Callback<TransactionResponse?> {
+            override fun onResponse(call: Call<TransactionResponse?>, response: Response<TransactionResponse?>) {
+                if (response.isSuccessful && response.body() != null) {
+
+                    if (dialog != null && dialog.isShowing) dialog.dismiss()
+
+                    val d = Dialog(context)
+                    d.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    d.setContentView(R.layout.trx_dialog)
+
+                    val lp = WindowManager.LayoutParams()
+                    lp.copyFrom(d.window!!.attributes)
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT
+                    lp.height = WindowManager.LayoutParams.MATCH_PARENT
+                    d.show()
+                    d.window!!.attributes = lp
+
+                    val recycler = d.findViewById<RecyclerView>(R.id.trxList)!!
+                    val close = d.findViewById<ImageButton>(R.id.close)!!
+
+                    val adapter = TrxAdapter()
+                    recycler.adapter = adapter
+
+                    if(response.body()!!.transactions != null){
+                        adapter.submitList(response.body()!!.transactions!!)
+                    }
+
+                    close.setOnClickListener {
+                        d.dismiss()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<TransactionResponse?>, t: Throwable) {
+                Log.d("getUser", "isNotSuccessful")
+                if (dialog != null && dialog.isShowing) dialog.dismiss()
+            }
+        })
+
 
     }
 

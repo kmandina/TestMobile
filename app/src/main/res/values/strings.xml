@@ -5,6 +5,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_detail">Detail</string>
 
+    <string name="title_trx">Transactions</string>
+
     <string name="hint_user">User</string>
     <string name="hint_password">Password</string>
     <string name="action_login">Authenticate</string>
