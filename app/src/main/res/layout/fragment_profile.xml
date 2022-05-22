@@ -90,6 +90,28 @@
             app:layout_constraintTop_toBottomOf="@+id/tvCardNumber" />
 
 
+        <EditText
+            android:hint="@string/hint_card_number"
+            android:id="@+id/cardNumberInput"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/checkAction"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:textColorHint="@color/black"
+            android:background="@color/purple_700"
+            android:id="@+id/checkAction"
+            android:layout_margin="5dp"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="@string/action_check"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineBack"
             android:layout_width="wrap_content"

@@ -15,6 +15,7 @@ import com.kmandina.testmobile.data.api.ConnectorService
 import com.kmandina.testmobile.data.api.serialize.LoginRequest
 import com.kmandina.testmobile.data.api.serialize.LoginResponse
 import com.kmandina.testmobile.databinding.ActivityLoginBinding
+import com.kmandina.testmobile.utils.MyUtils
 import com.kmandina.testmobile.utils.api
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -52,101 +53,118 @@ class LoginActivity : AppCompatActivity(), TextWatcher {
         binding.etPassword.addTextChangedListener(this)
 
         binding.loginAction.setOnClickListener {
-            if (binding.layoutUser.error == null && binding.layoutPassword.error == null) {
+            if (MyUtils.isNetworkConnected(this)){
+                if (binding.layoutUser.error == null && binding.layoutPassword.error == null) {
 
-                val user = binding.etUser.text.toString().lowercase()
-                val pass = binding.etPassword.text.toString()
+                    val user = binding.etUser.text.toString().lowercase()
+                    val pass = binding.etPassword.text.toString()
 
-                val builder = OkHttpClient.Builder()
-                val okHttpClient = builder
-                    .readTimeout(180, TimeUnit.SECONDS)
-                    .connectTimeout(180, TimeUnit.SECONDS)
+                    val builder = OkHttpClient.Builder()
+                    val okHttpClient = builder
+                        .readTimeout(180, TimeUnit.SECONDS)
+                        .connectTimeout(180, TimeUnit.SECONDS)
 
-                    .build()
+                        .build()
 
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(api)
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
+                    val retrofit = Retrofit.Builder()
+                        .baseUrl(api)
+                        .client(okHttpClient)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
 
-                val connectorService: ConnectorService =
-                    retrofit.create(ConnectorService::class.java)
+                    val connectorService: ConnectorService =
+                        retrofit.create(ConnectorService::class.java)
 
 //                val loginRequest = LoginRequest(
 //
 //                )
 
-                val call: Call<LoginResponse> =
-                    connectorService.login(
-                        user,
-                        pass,
-                        "MX",
-                        "password",
-                        "IATestCandidate",
-                        "c840457e777b4fee9b510fbcd4985b68"
-                    )
+                    val call: Call<LoginResponse> =
+                        connectorService.login(
+                            user,
+                            pass,
+                            "MX",
+                            "password",
+                            "IATestCandidate",
+                            "c840457e777b4fee9b510fbcd4985b68"
+                        )
 
-                if(dialog != null){
-                    dialog!!.show()
-                }
+                    if (dialog != null) {
+                        dialog!!.show()
+                    }
 
-                call.enqueue(object : Callback<LoginResponse> {
-                    override fun onResponse(
-                        call: Call<LoginResponse>,
-                        response: Response<LoginResponse>
-                    ) {
+                    call.enqueue(object : Callback<LoginResponse> {
+                        override fun onResponse(
+                            call: Call<LoginResponse>,
+                            response: Response<LoginResponse>
+                        ) {
 
-                        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
+                            if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
-                        if (response.isSuccessful) {
+                            if (response.isSuccessful) {
 
-                            if (response.body()?.access != null) {
-                                Log.d("Auth", "token: " + response.body()!!.access!!)
-                                sp.edit().putString("token", response.body()!!.access!!).apply()
-                                sp.edit().putString("refreshToken", response.body()!!.refresh!!)
-                                    .apply()
+                                if (response.body()?.access != null) {
+                                    Log.d("Auth", "token: " + response.body()!!.access!!)
+                                    sp.edit().putString("token", response.body()!!.access!!).apply()
+                                    sp.edit().putString("refreshToken", response.body()!!.refresh!!)
+                                        .apply()
 
-                                sp.edit().putBoolean("login", true).apply()
+                                    sp.edit().putBoolean("login", true).apply()
 
-                                startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    startActivity(
+                                        Intent(
+                                            this@LoginActivity,
+                                            MainActivity::class.java
+                                        )
+                                    )
+
+                                } else {
+                                    Log.d("Auth", "error login")
+
+                                    AlertDialog.Builder(this@LoginActivity)
+                                        .setTitle("Notification")
+                                        .setMessage("Error on authentication")
+                                        .setPositiveButton("Accept") { _, _ -> }
+                                        .show()
+
+                                }
+
 
                             } else {
                                 Log.d("Auth", "error login")
 
                                 AlertDialog.Builder(this@LoginActivity)
                                     .setTitle("Notification")
-                                    .setMessage("Error on authentication")
-                                    .setPositiveButton("Accept") { _, _ ->  }
+                                    .setMessage(
+                                        "Error on authentication: ${
+                                            response.errorBody()?.string()
+                                        }"
+                                    )
+                                    .setPositiveButton("Accept") { _, _ -> }
                                     .show()
-
                             }
+                        }
 
+                        override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                            Log.d("Auth", "error connection")
 
-                        } else {
-                            Log.d("Auth", "error login")
+                            if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
 
                             AlertDialog.Builder(this@LoginActivity)
                                 .setTitle("Notification")
-                                .setMessage("Error on authentication: ${response.errorBody()?.string()}")
+                                .setMessage("Error on authentication: ${t.message}")
                                 .setPositiveButton("Accept") { _, _ -> }
                                 .show()
                         }
-                    }
+                    })
 
-                    override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                        Log.d("Auth", "error connection")
-
-                        if (dialog != null && dialog!!.isShowing) dialog!!.dismiss()
-
-                        AlertDialog.Builder(this@LoginActivity)
-                            .setTitle("Notification")
-                            .setMessage("Error on authentication: ${t.message}")
-                            .setPositiveButton("Accept") { _, _ -> }
-                            .show()
-                    }
-                })
-
+                }
+            }else{
+                AlertDialog.Builder(this)
+                    .setTitle("Notification")
+                    .setMessage("Connection Error")
+                    .setPositiveButton("Accept") { _, _ ->  }
+                    .show()
             }
         }
 
